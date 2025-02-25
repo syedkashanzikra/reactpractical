@@ -2,40 +2,43 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [schools, setSchools] = useState(() => {
-    const storedSchools = JSON.parse(localStorage.getItem("schools"));
-    return Array.isArray(storedSchools) ? storedSchools : [];
+  // Ensure books is always an array
+  const [books, setBooks] = useState(() => {
+    const storedBooks = JSON.parse(localStorage.getItem("books"));
+    return Array.isArray(storedBooks) ? storedBooks : [];
   });
 
-  const [schoolName, setSchoolName] = useState("");
+  const [bookName, setBookName] = useState("");
   const [description, setDescription] = useState("");
+  const [author, setAuthor] = useState("");
 
-  useEffect(() => localStorage.setItem("schools", JSON.stringify(schools)), [schools]);
+  useEffect(() => localStorage.setItem("books", JSON.stringify(books)), [books]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!schoolName || !description) return alert("Fill all fields!");
+    if (!bookName || !description || !author) return alert("Fill all fields!");
 
-    setSchools([...schools, { schoolName, description }]);
-    setSchoolName(""); setDescription(""); // Clear inputs
+    setBooks([...books, { bookName, description, author }]);
+    setBookName(""); setDescription(""); setAuthor(""); // Clear inputs
   };
 
-  const handleDelete = (index) => setSchools(schools.filter((_, i) => i !== index));
+  const handleDelete = (index) => setBooks(books.filter((_, i) => i !== index));
 
   return (
     <div className="container">
-      <h2>School Management System</h2>
+      <h2>Book Management System</h2>
 
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="School Name" value={schoolName} onChange={(e) => setSchoolName(e.target.value)} required />
+        <input type="text" placeholder="Book Name" value={bookName} onChange={(e) => setBookName(e.target.value)} required />
         <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
-        <button type="submit">Add School</button>
+        <input type="text" placeholder="Author" value={author} onChange={(e) => setAuthor(e.target.value)} required />
+        <button type="submit">Add Book</button>
       </form>
 
       <ul>
-        {schools.map((school, index) => (
+        {books.map((book, index) => (
           <li key={index}>
-            <strong>{school.schoolName}</strong> - {school.description}
+            <strong>{book.bookName}</strong> - {book.description} by {book.author}
             <button onClick={() => handleDelete(index)}>Delete</button>
           </li>
         ))}
