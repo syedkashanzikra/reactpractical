@@ -2,42 +2,40 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [courses, setCourses] = useState(() => {
-    const storedCourses = JSON.parse(localStorage.getItem("courses"));
-    return Array.isArray(storedCourses) ? storedCourses : []; // Ensure it's always an array
+  const [schools, setSchools] = useState(() => {
+    const storedSchools = JSON.parse(localStorage.getItem("schools"));
+    return Array.isArray(storedSchools) ? storedSchools : [];
   });
 
-  const [courseName, setCourseName] = useState("");
+  const [schoolName, setSchoolName] = useState("");
   const [description, setDescription] = useState("");
-  const [instructor, setInstructor] = useState("");
 
-  useEffect(() => localStorage.setItem("courses", JSON.stringify(courses)), [courses]);
+  useEffect(() => localStorage.setItem("schools", JSON.stringify(schools)), [schools]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!courseName || !description || !instructor) return alert("Fill all fields!");
+    if (!schoolName || !description) return alert("Fill all fields!");
 
-    setCourses([...courses, { courseName, description, instructor }]);
-    setCourseName(""); setDescription(""); setInstructor(""); // Clear inputs
+    setSchools([...schools, { schoolName, description }]);
+    setSchoolName(""); setDescription(""); // Clear inputs
   };
 
-  const handleDelete = (index) => setCourses(courses.filter((_, i) => i !== index));
+  const handleDelete = (index) => setSchools(schools.filter((_, i) => i !== index));
 
   return (
     <div className="container">
-      <h2>AI Course Management System</h2>
+      <h2>School Management System</h2>
 
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Course Name" value={courseName} onChange={(e) => setCourseName(e.target.value)} required />
+        <input type="text" placeholder="School Name" value={schoolName} onChange={(e) => setSchoolName(e.target.value)} required />
         <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
-        <input type="text" placeholder="Instructor" value={instructor} onChange={(e) => setInstructor(e.target.value)} required />
-        <button type="submit">Add Course</button>
+        <button type="submit">Add School</button>
       </form>
 
       <ul>
-        {courses.map((course, index) => (
+        {schools.map((school, index) => (
           <li key={index}>
-            <strong>{course.courseName}</strong> - {course.description} by {course.instructor}
+            <strong>{school.schoolName}</strong> - {school.description}
             <button onClick={() => handleDelete(index)}>Delete</button>
           </li>
         ))}
